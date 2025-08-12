@@ -170,3 +170,4 @@ cython_debug/
 pyauthservice/__pycache__/settings.cpython-37.pyc
 pyauthservice/__pycache__/urls.cpython-37.pyc
 /logs
+/staticfiles

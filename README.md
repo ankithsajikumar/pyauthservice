@@ -71,14 +71,52 @@ pip freeze > requirements.txt
 
 - **User Management:**  
   - `GET /api/users/` — List users  
+    ```sh
+    curl -H "Authorization: Bearer <access_token>" https://domain/api/users/
+    ```
   - `POST /api/users/` — Create user  
+    ```sh
+    curl -X POST https://domain/api/users/ \
+      -H "Content-Type: application/json" \
+      -d '{
+        "username": "newuser",
+        "password": "newpassword",
+        "email": "newuser@example.com",
+        "first_name": "First Name",
+        "last_name": "Last Name"
+      }'
+    ```
+    > Only staff users can set `is_staff` or `is_active` fields. Required fields are `username`, `password`, `email`,
   - `GET /api/users/<id>/` — Retrieve user  
+    ```sh
+    curl -H "Authorization: Bearer <access_token>" https://domain/api/users/1/
+    ```
   - `PUT/PATCH /api/users/<id>/` — Update user  
+    ```sh
+    curl -X PATCH https://domain/api/users/1/ \
+      -H "Authorization: Bearer <access_token>" \
+      -H "Content-Type: application/json" \
+      -d '{"first_name": "UpdatedName"}'
+    ```
   - `DELETE /api/users/<id>/` — Delete user  
+    ```sh
+    curl -X DELETE https://domain/api/users/1/ \
+      -H "Authorization: Bearer <access_token>"
+    ```
 
 - **JWT Authentication:**  
   - `POST /api/token/` — Obtain JWT token  
+    ```sh
+    curl -X POST https://domain/api/token/ \
+      -H "Content-Type: application/json" \
+      -d '{"username": "youruser", "password": "yourpassword"}'
+    ```
   - `POST /api/token/refresh/` — Refresh JWT token  
+    ```sh
+    curl -X POST https://domain/api/token/refresh/ \
+      -H "Content-Type: application/json" \
+      -d '{"refresh": "<your_refresh_token>"}'
+    ```
 
 - **OAuth2:**  
   - `/o/` — OAuth2 endpoints (see [django-oauth-toolkit docs](https://django-oauth-toolkit.readthedocs.io/en/latest/))

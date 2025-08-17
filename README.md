@@ -86,7 +86,8 @@ pip freeze > requirements.txt
         "last_name": "Last Name"
       }'
     ```
-    > Only staff users can set `is_staff` or `is_active` fields. Required fields are `username`, `password`, `email`,
+    > Only staff users can set `is_staff` or `is_active` fields. Required fields are `username`, `password`, `email`.
+
   - `GET /api/users/<id>/` — Retrieve user  
     ```sh
     curl -H "Authorization: Bearer <access_token>" https://domain/api/users/1/
@@ -103,6 +104,12 @@ pip freeze > requirements.txt
     curl -X DELETE https://domain/api/users/1/ \
       -H "Authorization: Bearer <access_token>"
     ```
+
+  - `GET /auth/me/` — Get current authenticated user's info  
+    ```sh
+    curl -H "Authorization: Bearer <access_token>" https://domain/auth/me/
+    ```
+    > Returns the authenticated user's details.
 
 - **JWT Authentication:**  
   - `POST /api/token/` — Obtain JWT token  

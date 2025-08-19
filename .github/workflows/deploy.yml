@@ -96,9 +96,9 @@ jobs:
       # Step 6: Check server status
       - name: Step 6 - Check server status
         run: |
-          RESPONSE=$(curl -s -w "%{http_code}" -o status_response.json -X GET "https://${{ vars.CONSOLE_USER_ID }}.pythonanywhere.com/api/status/" \
+          STATUS_CODE=$(curl -s -o status_response.json -w "%{http_code}" -X GET "https://${{ vars.CONSOLE_USER_ID }}.pythonanywhere.com/api/status/" \
             -H "${{ vars.SERVICE_API_TOKEN_KEY }}: ${{ secrets.SERVICE_API_TOKEN }}")
-          STATUS_CODE=$(tail -c 3 <<< "$RESPONSE")
+
           if [ "$STATUS_CODE" != "200" ]; then
             echo "Status check failed (status $STATUS_CODE)"
             cat status_response.json

@@ -21,10 +21,11 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import home_redirect, status_report
+from .views import home_redirect, status_report, login_page
 
 urlpatterns = [
     path('', home_redirect, name='home-redirect'),
+    path('login/', login_page, name='login-page'),
     path('admin/', admin.site.urls),
     path('o/', include(oauth2_urls)),
     path('api/', include(users_urls)),

@@ -13,4 +13,4 @@ def status_report(request):
     auth_header = request.headers.get(settings.SERVICE_API_TOKEN_KEY)
     if not api_token or auth_header != api_token:
         return JsonResponse({"detail": "Unauthorized"}, status=401)
-    return JsonResponse({"status": "ok", "service": "pyauthservice"})
+    return JsonResponse({"status": "ok", "service": "pyauthservice"}, status=200)

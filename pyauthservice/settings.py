@@ -11,19 +11,31 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+# Home page
+HOME_URL = "https://hacksawrazor.pythonanywhere.com"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Loading environment variables
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kv^13fm02#x33k(z(%=u0g#gj*u3b(-cooo34=jc@6%_*5$$%3'
+SECRET_KEY = env('SECRET_KEY')
+
+# Service API authorization details
+SERVICE_API_TOKEN = env('SERVICE_API_TOKEN')
+SERVICE_API_TOKEN_KEY = 'X-Status-Token'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = [
     'localhost',

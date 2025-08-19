@@ -21,13 +21,16 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from .views import home_redirect, status_report
 
 urlpatterns = [
+    path('', home_redirect, name='home-redirect'),
     path('admin/', admin.site.urls),
     path('o/', include(oauth2_urls)),
     path('api/', include(users_urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/status/', status_report, name='status-report'),
 ]
 
 admin.site.site_header = 'Auth Service Administration'

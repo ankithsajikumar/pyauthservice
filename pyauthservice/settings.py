@@ -75,7 +75,7 @@ ROOT_URLCONF = 'pyauthservice.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'pyauthservice', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -170,6 +170,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://entespotify.github.io",
 ]
+
+# Login app inclusions
+LOGIN_PAGE_CSS = "https://entespotify.github.io/hacksaw-auth/static/css/main.3dbf150f.css"
+LOGIN_PAGE_JS = "https://entespotify.github.io/hacksaw-auth/static/js/main.90b7a0a5.js"
 
 if not DEBUG:
     LOGGING = {

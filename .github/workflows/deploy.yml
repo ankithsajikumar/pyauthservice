@@ -84,7 +84,7 @@ jobs:
       # Step 5: Reload webapp
       - name: Step 5 - Reload webapp
         run: |
-          RESPONSE=$(curl -s -w "%{http_code}" -o restart_response.json -X POST "https://www.pythonanywhere.com/api/v1/user/${{ vars.CONSOLE_USER_ID }}/webapps/${{ vars.CONSOLE_USER_ID }}.pythonanywhere.com/reload/" \
+          RESPONSE=$(curl -s -w "%{http_code}" -o restart_response.json -X POST "https://www.pythonanywhere.com/api/v0/user/${{ vars.CONSOLE_USER_ID }}/webapps/${{ vars.CONSOLE_USER_ID }}.pythonanywhere.com/reload/" \
             -H "Authorization: Token ${{ secrets.CONSOLE_API_KEY }}" \
             -H "Content-Type: application/json")
           if [ "$RESPONSE" -ne 200 ]; then

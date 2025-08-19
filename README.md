@@ -69,6 +69,13 @@ pip freeze > requirements.txt
 
 ## API Endpoints
 
+- **Root Redirect:**  
+  - `GET /` — Redirects to the configured `HOME_URL`  
+    ```sh
+    curl -v https://domain/
+    ```
+    > You will receive an HTTP 302 redirect to the URL set as `HOME_URL`.
+
 - **User Management:**  
   - `GET /api/users/` — List users  
     ```sh
@@ -128,6 +135,16 @@ pip freeze > requirements.txt
 - **OAuth2:**  
   - `/o/` — OAuth2 endpoints (see [django-oauth-toolkit docs](https://django-oauth-toolkit.readthedocs.io/en/latest/))
 
+- **Status:**  
+  - `GET /api/status/` — Server status (requires service token)  
+    ```sh
+    curl -H "<service_api_token_key>: <service_api_token>" https://domain/api/status/
+    ```
+    > Returns:  
+    > `{ "status": "ok", "service": "pyauthservice" }`  
+    >  
+    > Use the value of `SERVICE_API_TOKEN` as `<service_api_token>`.
+
 ---
 
 ## Authentication
@@ -180,6 +197,42 @@ pyauthservice/
 ```
 
 ---
+
+## Environment Variables (`.env`)
+
+This project uses a `.env` file to manage sensitive settings and environment-specific configuration.  
+Create a `.env` file in your project root (same directory as `manage.py`) with the following variables:
+
+| Variable             | Description                                      |
+|----------------------|--------------------------------------------------|
+| `SECRET_KEY`         | Django secret key for cryptographic signing      |
+| `DEBUG`              | Set to `True` for development, `False` for prod  |
+| `SERVICE_API_TOKEN`  | Token required for accessing special endpoints   |
+
+**Example `.env` file:**
+```env
+SECRET_KEY=your-django-secret-key
+DEBUG=True
+SERVICE_API_TOKEN=your-status-api-token
+```
+
+> **Note:** Never commit your `.env` file with real secrets to version control. Use `.env.example` as a template.
+
+---
+
+### GitHub Actions Deploy Prerequisites
+
+Before running the deploy workflow, set the following in your repository:
+
+#### Repository Variables (`Settings > Variables > Actions`)
+- `CONSOLE_USER_ID`: PythonAnywhere username
+- `SERVICE_API_TOKEN_KEY`: The header key for your status API token
+
+#### Repository Secrets (`Settings > Secrets > Actions`)
+- `CONSOLE_API_KEY`: PythonAnywhere API token (get from your PythonAnywhere account)
+- `SERVICE_API_TOKEN`: The value of your status API token (should match `SERVICE_API_TOKEN` in your `.env` and Django settings)
+
+These are required for the workflow to authenticate with PythonAnywhere and to check your server
 
 ## License
 

@@ -218,6 +218,22 @@ SERVICE_API_TOKEN=your-status-api-token
 
 > **Note:** Never commit your `.env` file with real secrets to version control. Use `.env.example` as a template.
 
+---
+
+### GitHub Actions Deploy Prerequisites
+
+Before running the deploy workflow, set the following in your repository:
+
+#### Repository Variables (`Settings > Variables > Actions`)
+- `CONSOLE_USER_ID`: PythonAnywhere username
+- `SERVICE_API_TOKEN_KEY`: The header key for your status API token
+
+#### Repository Secrets (`Settings > Secrets > Actions`)
+- `CONSOLE_API_KEY`: PythonAnywhere API token (get from your PythonAnywhere account)
+- `SERVICE_API_TOKEN`: The value of your status API token (should match `SERVICE_API_TOKEN` in your `.env` and Django settings)
+
+These are required for the workflow to authenticate with PythonAnywhere and to check your server
+
 ## License
 
 MIT License

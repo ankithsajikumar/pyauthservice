@@ -171,9 +171,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://entespotify.github.io",
 ]
 
-# Login app inclusions
-LOGIN_PAGE_CSS = "https://entespotify.github.io/hacksaw-auth/static/css/main.3dbf150f.css"
-LOGIN_PAGE_JS = "https://entespotify.github.io/hacksaw-auth/static/js/main.90b7a0a5.js"
+# Artifactory
+ARTIFACTORY_DOMAIN = env('ARTIFACTORY_DOMAIN')
+
+# Login app
+LOGIN_APP_VERSION = env('LOGIN_APP_VERSION')
 
 if not DEBUG:
     LOGGING = {

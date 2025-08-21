@@ -208,12 +208,16 @@ Create a `.env` file in your project root (same directory as `manage.py`) with t
 | `SECRET_KEY`         | Django secret key for cryptographic signing      |
 | `DEBUG`              | Set to `True` for development, `False` for prod  |
 | `SERVICE_API_TOKEN`  | Token required for accessing special endpoints   |
+| `ARTIFACTORY_DOMAIN` | Artifactory domain for web apps used in project  |
+| `LOGIN_APP_VERSION`  | Login web app version to be used                 |
 
 **Example `.env` file:**
 ```env
-SECRET_KEY=your-django-secret-key
+SECRET_KEY=<django-secret-key>
 DEBUG=True
-SERVICE_API_TOKEN=your-status-api-token
+SERVICE_API_TOKEN=<service-api-token>
+ARTIFACTORY_DOMAIN=<artifactory-domain>
+LOGIN_APP_VERSION=0.0.1
 ```
 
 > **Note:** Never commit your `.env` file with real secrets to version control. Use `.env.example` as a template.

@@ -3,6 +3,8 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 
+from pyauthservice.constants import LOGIN_APP_CSS, LOGIN_APP_JS
+
 def home_redirect(request):
     return redirect(settings.HOME_URL)
 
@@ -15,6 +17,8 @@ def status_report(request):
     return JsonResponse({"status": "ok", "service": "pyauthservice"}, status=200)
 
 def login_page(request):
-    css_url = getattr(settings, "LOGIN_PAGE_CSS", None)
-    js_url = getattr(settings, "LOGIN_PAGE_JS", None)
+    artifactory_domain = getattr(settings, "ARTIFACTORY_DOMAIN", None)
+    app_version = getattr(settings, "LOGIN_APP_VERSION", None)
+    css_url = f"{artifactory_domain}{LOGIN_APP_CSS.format(version=app_version)}"
+    js_url = f"{artifactory_domain}{LOGIN_APP_JS.format(version=app_version)}"
     return render(request, "login.html", {"css_url": css_url, "js_url": js_url})

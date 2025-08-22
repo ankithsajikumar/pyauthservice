@@ -2,6 +2,9 @@ from django.conf import settings
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from pyauthservice.constants import LOGIN_APP_CSS, LOGIN_APP_JS
 
@@ -22,3 +25,24 @@ def login_page(request):
     css_url = f"{artifactory_domain}{LOGIN_APP_CSS.format(version=app_version)}"
     js_url = f"{artifactory_domain}{LOGIN_APP_JS.format(version=app_version)}"
     return render(request, "login.html", {"css_url": css_url, "js_url": js_url})
+
+@csrf_exempt
+def login_view(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user = authenticate(
+            request,
+            username=data.get("username"),
+            password=data.get("password")
+        )
+        if user:
+            login(request, user)
+            return JsonResponse({"status": "ok"})
+        return JsonResponse({"error": "Invalid credentials"}, status=400)
+    
+@csrf_exempt
+def logout_view(request):
+    if request.method == "POST":
+        logout(request)
+        return JsonResponse({"status": "ok", "message": "logged out"})
+    return JsonResponse({"error": "Invalid method"}, status=405)

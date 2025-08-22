@@ -103,7 +103,7 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_URL = '/admin/login/'
+LOGIN_URL = '/login/#/login'
 
 OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,

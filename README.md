@@ -134,6 +134,16 @@ pip freeze > requirements.txt
 
 - **OAuth2:**  
   - `/o/` — OAuth2 endpoints (see [django-oauth-toolkit docs](https://django-oauth-toolkit.readthedocs.io/en/latest/))
+  - `POST /api/login/` — Login endpoint 
+    ```sh
+    curl -X POST https://domain/api/login/ \
+      -H "Content-Type: application/json" \
+      -d '{"username": "user", "password": "password"}'
+    ```
+    - `POST /api/logout/` — Logout endpoint  
+    ```sh
+    curl -X POST https://domain/api/logout/ \
+    ```
 
 - **Status:**  
   - `GET /api/status/` — Server status (requires service token)  

@@ -140,7 +140,7 @@ pip freeze > requirements.txt
       -H "Content-Type: application/json" \
       -d '{"username": "user", "password": "password"}'
     ```
-    - `POST /api/logout/` — Logout endpoint  
+  - `POST /api/logout/` — Logout endpoint  
     ```sh
     curl -X POST https://domain/api/logout/ \
     ```
@@ -220,6 +220,7 @@ Create a `.env` file in your project root (same directory as `manage.py`) with t
 | `SERVICE_API_TOKEN`  | Token required for accessing special endpoints   |
 | `ARTIFACTORY_DOMAIN` | Artifactory domain for web apps used in project  |
 | `LOGIN_APP_VERSION`  | Login web app version to be used                 |
+| `OIDC_ISS_ENDPOINT`  | Auth service domain url passed with jwt          |
 
 **Example `.env` file:**
 ```env
@@ -228,9 +229,14 @@ DEBUG=True
 SERVICE_API_TOKEN=<service-api-token>
 ARTIFACTORY_DOMAIN=<artifactory-domain>
 LOGIN_APP_VERSION=0.0.1
+OIDC_ISS_ENDPOINT=<auth-service-domain>
 ```
 
 > **Note:** Never commit your `.env` file with real secrets to version control. Use `.env.example` as a template.
+
+---
+
+> **Note:** Add an `oidc_private.pem` file to project root and keep RSA private key in it for OIDC.
 
 ---
 

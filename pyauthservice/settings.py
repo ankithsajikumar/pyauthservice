@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'oauth2_provider',
+    'oauth',
     'rest_framework',
     'corsheaders',
 ]
@@ -109,6 +110,15 @@ OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
     'REFRESH_TOKEN_EXPIRE_SECONDS': 3600 * 24 * 365,
     'PKCE_REQUIRED': False,
+    "ACCESS_TOKEN_GENERATOR": "oauth.jwt_tokens.jwt_access_token_generator",
+    'OIDC_ENABLED': True,
+    'OIDC_RSA_PRIVATE_KEY': Path("oidc_private.pem").read_text(),
+    'OIDC_ISS_ENDPOINT': env('OIDC_ISS_ENDPOINT'),
+    'SCOPES': {
+        "read": "Read-only access",
+        "write": "Write access",
+        "openid": "OpenID Connect scope",
+    },
 }
 
 REST_FRAMEWORK = {

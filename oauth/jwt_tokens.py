@@ -4,6 +4,14 @@ from oauth2_provider.utils import jwk_from_pem
 
 from pyauthservice.constants import DEFAULT_AUDIENCE
 
+def get_token_user(request):
+    if getattr(request, "user", ""):
+        return request.user
+    elif getattr(request, "client", "") and getattr(request.client, "user", ""):
+        return request.client.user.get_username()
+    return ""
+
+
 def jwt_access_token_generator(request):
     now = int(time.time())
     exp = now + settings.OAUTH2_PROVIDER.get("ACCESS_TOKEN_EXPIRE_SECONDS", 3600)
@@ -13,7 +21,7 @@ def jwt_access_token_generator(request):
 
     payload = {
         "iss": settings.OAUTH2_PROVIDER["OIDC_ISS_ENDPOINT"],
-        "sub": str(getattr(request, "user", getattr(request, "client_id", "")) or ""),
+        "sub": get_token_user(request),
         "aud": audiences,
         "iat": now,
         "exp": exp,

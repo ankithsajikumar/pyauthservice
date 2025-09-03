@@ -6,7 +6,7 @@ from pyauthservice.constants import DEFAULT_AUDIENCE
 
 def get_token_user(request):
     if getattr(request, "user", ""):
-        return request.user
+        return request.user.get_username()
     elif getattr(request, "client", "") and getattr(request.client, "user", ""):
         return request.client.user.get_username()
     return ""

@@ -23,9 +23,8 @@ class SSOJWTAuthentication(BaseAuthentication):
 
         try:
             private_key = settings.OAUTH2_PROVIDER["OIDC_RSA_PRIVATE_KEY"]
-            key = jwk_from_pem(private_key)
-            public_key = key.thumbprint()
-
+            public_key = jwk_from_pem(private_key)
+            
             payload = jwt.decode(
                 token,
                 public_key,

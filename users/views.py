@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserWithPermissionsSerializer
 
 class AllowPostAnyAuthenticatedOtherwise(permissions.BasePermission):
     """
@@ -28,5 +28,5 @@ class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
+        serializer = UserWithPermissionsSerializer(request.user)
         return Response(serializer.data)

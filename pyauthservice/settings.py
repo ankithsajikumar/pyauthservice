@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'oauth',
     'rest_framework',
     'corsheaders',
+    'virtual_permissions'
 ]
 
 MIDDLEWARE = [

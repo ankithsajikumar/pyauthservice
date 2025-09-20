@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import User
+from django.contrib.auth.models import Permission
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,3 +40,25 @@ class UserSerializer(serializers.ModelSerializer):
             data.pop('is_staff', None)
             data.pop('is_active', None)
         return super().to_internal_value(data)
+    
+class UserWithPermissionsSerializer(serializers.ModelSerializer):
+    permissions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'email', 'first_name', 'last_name', 
+            'is_active', 'is_staff', 'is_superuser', 'permissions'
+        ]
+        read_only_fields = fields
+
+    def get_permissions(self, obj):
+        # Get user-specific permissions
+        user_permissions = obj.user_permissions.all()
+
+        # Get group permissions
+        group_permissions = Permission.objects.filter(group__user=obj)
+
+        # Combine and remove duplicates
+        all_permissions = user_permissions | group_permissions
+        return all_permissions.values('id', 'codename', 'name', 'content_type__app_label')

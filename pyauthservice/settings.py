@@ -184,6 +184,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://hacksawrazor.pythonanywhere.com",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 # Artifactory
 ARTIFACTORY_DOMAIN = env('ARTIFACTORY_DOMAIN')
 

@@ -6,12 +6,16 @@ set -e
 
 echo "🐳 PyAuthService - Starting..."
 
-# Wait for database to be ready
-echo "⏳ Waiting for database..."
-while ! nc -z $DB_HOST 5432; do
-  sleep 1
-done
-echo "✅ Database is ready"
+# Wait for database to be ready only when using a network database
+if [ -n "${DB_HOST:-}" ] && [ "${DB_HOST}" != "sqlite" ]; then
+  echo "⏳ Waiting for database at ${DB_HOST}:${DB_PORT:-5432}..."
+  while ! nc -z "${DB_HOST}" "${DB_PORT:-5432}"; do
+    sleep 1
+  done
+  echo "✅ Database is ready"
+else
+  echo "📁 Using local SQLite database; skipping external DB wait."
+fi
 
 # Run migrations
 echo "🔄 Running database migrations..."

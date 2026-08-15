@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Home page
 HOME_URL = "https://hacksawrazor.pythonanywhere.com"
@@ -128,11 +132,18 @@ OAUTH2_PROVIDER = {
 # Resolve OIDC private key (populate the dict value above)
 OIDC_RSA_PRIVATE_KEY = env('OIDC_RSA_PRIVATE_KEY', default=None)
 OIDC_PRIVATE_KEY_PATH = env('OIDC_PRIVATE_KEY_PATH', default=None)
-if OIDC_PRIVATE_KEY_PATH:
+
+if OIDC_RSA_PRIVATE_KEY:
+    # If OIDC_RSA_PRIVATE_KEY is set, reconstruct it from inline format
+    # (newlines are escaped as literal \n in env vars)
+    if '\\n' in OIDC_RSA_PRIVATE_KEY and '\n' not in OIDC_RSA_PRIVATE_KEY:
+        OIDC_RSA_PRIVATE_KEY = OIDC_RSA_PRIVATE_KEY.replace('\\n', '\n')
+elif OIDC_PRIVATE_KEY_PATH:
     try:
         OIDC_RSA_PRIVATE_KEY = Path(OIDC_PRIVATE_KEY_PATH).read_text()
-    except Exception:
-        OIDC_RSA_PRIVATE_KEY = OIDC_RSA_PRIVATE_KEY
+    except Exception as e:
+        logger.error(f"Failed to read OIDC key from {OIDC_PRIVATE_KEY_PATH}: {e}")
+        OIDC_RSA_PRIVATE_KEY = None
 
 if not OIDC_RSA_PRIVATE_KEY:
     pem_path = BASE_DIR / 'oidc_private.pem'
@@ -141,7 +152,7 @@ if not OIDC_RSA_PRIVATE_KEY:
 
 if not OIDC_RSA_PRIVATE_KEY:
     raise RuntimeError(
-        "OIDC private key not found. Set OIDC_RSA_PRIVATE_KEY (PEM content), "
+        "OIDC private key not found. Set OIDC_RSA_PRIVATE_KEY (inline PEM with \\n), "
         "or OIDC_PRIVATE_KEY_PATH (path to PEM), or add oidc_private.pem at project root."
     )
 

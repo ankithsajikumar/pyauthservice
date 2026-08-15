@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import (
 from .views import home_redirect, status_report, login_page, login_view, logout_view
 
 urlpatterns = [
-    path('', home_redirect, name='home-redirect'),
+    # path('', home_redirect, name='home-redirect'),
     path('login/', login_page, name='login-page'),
     path('admin/', admin.site.urls),
     path('o/', include(oauth2_urls)),

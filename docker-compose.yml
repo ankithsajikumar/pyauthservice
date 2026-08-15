@@ -1,5 +1,4 @@
 version: '3.9'
-
 services:
   pyauthservice:
     image: ghcr.io/ankithsajikumar/pyauthservice:latest
@@ -10,14 +9,18 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /var/apps/auth/db/db.sqlite3:/app/db.sqlite3
+      - sqlite-data:/app/db
     environment:
       - SECRET_KEY=dev-secret-key-change-in-production
       - SERVICE_API_TOKEN=dev-token-change-in-production
       - ARTIFACTORY_DOMAIN=to-be-filled
       - LOGIN_APP_VERSION=to-be-filled
-      - OIDC_PRIVATE_KEY_PATH=/app/oidc_private.pem
       - OIDC_ISS_ENDPOINT=to-be-filled
       - DEBUG=False
+      # OIDC inline PEM (newlines escaped as \n; settings.py reconstructs them)
+      - OIDC_RSA_PRIVATE_KEY=add-rsa-private-key
     entrypoint: /app/entrypoint.sh
     command: gunicorn pyauthservice.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
+
+volumes:
+  sqlite-data:

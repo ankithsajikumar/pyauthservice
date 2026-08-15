@@ -16,6 +16,7 @@ services:
       - SERVICE_API_TOKEN=dev-token-change-in-production
       - ARTIFACTORY_DOMAIN=to-be-filled
       - LOGIN_APP_VERSION=to-be-filled
+      - OIDC_PRIVATE_KEY_PATH=/app/oidc_private.pem
       - OIDC_ISS_ENDPOINT=to-be-filled
       - DEBUG=False
     entrypoint: /app/entrypoint.sh

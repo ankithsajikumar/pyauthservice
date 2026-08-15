@@ -113,7 +113,10 @@ OAUTH2_PROVIDER = {
     'PKCE_REQUIRED': False,
     "ACCESS_TOKEN_GENERATOR": "oauth.jwt_tokens.jwt_access_token_generator",
     'OIDC_ENABLED': True,
-    'OIDC_RSA_PRIVATE_KEY': Path("oidc_private.pem").read_text(),
+    # OIDC RSA private key: prefer raw key in env, then a path in env, then BASE_DIR/oidc_private.pem
+    # Set either `OIDC_RSA_PRIVATE_KEY` (PEM content) or `OIDC_PRIVATE_KEY_PATH` (path to PEM file)
+    # or place `oidc_private.pem` at the project root.
+    'OIDC_RSA_PRIVATE_KEY': None,
     'OIDC_ISS_ENDPOINT': env('OIDC_ISS_ENDPOINT'),
     'SCOPES': {
         "read": "Read-only access",
@@ -121,6 +124,29 @@ OAUTH2_PROVIDER = {
         "openid": "OpenID Connect scope",
     },
 }
+
+# Resolve OIDC private key (populate the dict value above)
+OIDC_RSA_PRIVATE_KEY = env('OIDC_RSA_PRIVATE_KEY', default=None)
+OIDC_PRIVATE_KEY_PATH = env('OIDC_PRIVATE_KEY_PATH', default=None)
+if OIDC_PRIVATE_KEY_PATH:
+    try:
+        OIDC_RSA_PRIVATE_KEY = Path(OIDC_PRIVATE_KEY_PATH).read_text()
+    except Exception:
+        OIDC_RSA_PRIVATE_KEY = OIDC_RSA_PRIVATE_KEY
+
+if not OIDC_RSA_PRIVATE_KEY:
+    pem_path = BASE_DIR / 'oidc_private.pem'
+    if pem_path.exists():
+        OIDC_RSA_PRIVATE_KEY = pem_path.read_text()
+
+if not OIDC_RSA_PRIVATE_KEY:
+    raise RuntimeError(
+        "OIDC private key not found. Set OIDC_RSA_PRIVATE_KEY (PEM content), "
+        "or OIDC_PRIVATE_KEY_PATH (path to PEM), or add oidc_private.pem at project root."
+    )
+
+# Inject back into provider config
+OAUTH2_PROVIDER['OIDC_RSA_PRIVATE_KEY'] = OIDC_RSA_PRIVATE_KEY
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

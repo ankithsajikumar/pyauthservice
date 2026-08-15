@@ -13,7 +13,54 @@ A Django-based authentication service providing SSO (Single Sign-On) and user ma
 
 ---
 
-## Getting Started
+## 🐳 Quick Start with Docker (Recommended)
+
+The fastest way to get started is using Docker and Docker Compose. This automatically sets up PostgreSQL, the app, and Redis cache.
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Setup
+```sh
+# 1. Clone and enter directory
+git clone https://github.com/ankithsajikumar/pyauthservice.git
+cd pyauthservice
+
+# 2. Copy environment template and customize
+cp .env.example .env
+
+# 3. Start all services (app, database, cache)
+docker-compose up -d
+
+# Container runs migrations and creates superuser automatically!
+```
+
+### Access Services
+- **App**: http://localhost:8000
+- **Admin**: http://localhost:8000/admin (username: `admin`, password: `admin`)
+- **API**: http://localhost:8000/api/
+- **Database**: `postgresql://authuser:authpassword@localhost:5432/pyauthservice`
+
+### Useful Docker Commands
+```sh
+make docker-help              # Show all available commands
+make docker-logs              # View live application logs
+make docker-shell             # Jump into app container
+make docker-migrate           # Run migrations manually
+make docker-superuser         # Create another superuser
+make docker-down              # Stop all services
+docker-compose ps             # List running containers
+docker-compose exec app bash  # Run shell commands in app
+```
+
+### Deployment to AWS EC2
+For production deployment with HTTPS, SSL certificate auto-renewal, CI/CD automation, and backups, see the [Docker Implementation Guide](https://github.com/ankithsajikumar/pyauthservice/wiki/Docker-EC2-Deployment).
+
+---
+
+## 🚀 Traditional Setup (Without Docker)
+
+### Getting Started
 
 ### 1. Clone the repository
 

@@ -34,14 +34,18 @@ COPY . .
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+# Create non-root user for security
+RUN useradd -m appuser && \
+    mkdir -p /home/appuser/.local && \
+    cp -a /root/.local/. /home/appuser/.local/ && \
+    chown -R appuser:appuser /app /home/appuser
+
 # Set environment variables
-ENV PATH=/root/.local/bin:$PATH \
+ENV PATH=/home/appuser/.local/bin:$PATH \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000
 
-# Create non-root user for security
-RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser
 
 # Expose port

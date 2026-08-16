@@ -8,9 +8,6 @@ import json
 
 from pyauthservice.constants import LOGIN_APP_CSS, LOGIN_APP_JS
 
-def home_redirect(request):
-    return redirect(settings.HOME_URL)
-
 @require_GET
 def status_report(request):
     api_token = settings.SERVICE_API_TOKEN

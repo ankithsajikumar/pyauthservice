@@ -16,6 +16,10 @@ def status_report(request):
         return JsonResponse({"detail": "Unauthorized"}, status=401)
     return JsonResponse({"status": "ok", "service": "pyauthservice"}, status=200)
 
+#To-do: add proper health check and request scope.
+def health(request):
+    return JsonResponse({"status": "ok"})
+
 def login_page(request):
     artifactory_domain = getattr(settings, "ARTIFACTORY_DOMAIN", None)
     app_version = getattr(settings, "LOGIN_APP_VERSION", None)

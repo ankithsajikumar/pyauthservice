@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import status_report, login_page, login_view, logout_view
+from .views import status_report, login_page, login_view, logout_view, health
 
 urlpatterns = [
     path('auth/login/', login_page, name='login-page'),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('api/login/', login_view, name='api_login'),
     path('api/logout/', logout_view, name='api_logout'),
     path('api/status/', status_report, name='status-report'),
+    path('health/', health, name='health'),
 ]
 
 admin.site.site_header = 'Auth Service Administration'

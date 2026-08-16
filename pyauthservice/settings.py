@@ -207,7 +207,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = env('STATIC_URL', default='/static/')
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
@@ -220,7 +220,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://192.168.1.99",
     "https://entespotify.github.io",
-    "https://hacksawrazor.pythonanywhere.com",
+    "https://hacksaw.in",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -230,49 +230,3 @@ ARTIFACTORY_DOMAIN = env('ARTIFACTORY_DOMAIN')
 
 # Login app
 LOGIN_APP_VERSION = env('LOGIN_APP_VERSION')
-
-# if not DEBUG:
-#     LOGGING = {
-#         'version': 1,
-#         'disable_existing_loggers': False,  # Allows the use of other loggers like 'django.db.backends'
-#         'formatters': {
-#             'verbose': {
-#                 'format': '%(asctime)s %(levelname)s %(name)s %(process)d %(thread)d %(message)s'
-#             },
-#             'simple': {
-#                 'format': '%(levelname)s %(message)s'
-#             },
-#         },
-#         'handlers': {
-#             'logfile': {
-#                 'level': 'DEBUG',
-#                 'class': 'logging.handlers.TimedRotatingFileHandler',
-#                 'filename': BASE_DIR / 'logs/feature.log',
-#                 'when': 'midnight',  # Rotate logs at midnight
-#                 'interval': 1,  # Every 1 day
-#                 'backupCount': 7,  # Keep 7 days of logs
-#                 'formatter': 'verbose',
-#             },
-#             'console': {
-#                 'level': 'DEBUG',  # Minimum level of messages to log
-#                 'class': 'logging.StreamHandler',
-#                 'formatter': 'verbose'
-#             },
-#         },
-#         'loggers': {
-#             'django': {
-#                 'handlers': ['logfile'],
-#                 'level': 'DEBUG',
-#                 'propagate': True,
-#             },
-#             'django.utils.autoreload': {
-#                 'level': 'ERROR',  # Suppress logs below ERROR level
-#                 'handlers': ['console', 'logfile'],
-#                 'propagate': False,  # Prevent propagation to parent loggers
-#             },
-#         },
-#         'root': {
-#             'handlers': ['console', 'logfile'],
-#             'level': 'DEBUG',  # Log messages at this level and higher
-#         },
-#     }

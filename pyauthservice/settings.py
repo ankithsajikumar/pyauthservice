@@ -44,6 +44,9 @@ ALLOWED_HOSTS = [
     'apis.hacksaw.in',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://apis.hacksaw.in",
+]
 
 # Application definition
 

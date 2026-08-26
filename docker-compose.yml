@@ -1,25 +1,19 @@
+version: '3.8'
+
 services:
   pyauthservice:
-    image: ghcr.io/ankithsajikumar/pyauthservice:latest
+    image: ${FULL_IMAGE}:${IMAGE_TAG}
     build:
       context: .
       dockerfile: Dockerfile
     container_name: pyauthservice
     ports:
-      - "8000:8000"
+      - "${PORT:-8000:8000}"
     volumes:
       - sqlite-data:/app/db
       - ./staticfiles:/app/staticfiles
-    environment:
-      - STATIC_URL=/auth/static/
-      - SECRET_KEY=dev-secret-key-change-in-production
-      - SERVICE_API_TOKEN=dev-token-change-in-production
-      - ARTIFACTORY_DOMAIN=to-be-filled
-      - LOGIN_APP_VERSION=to-be-filled
-      - OIDC_ISS_ENDPOINT=to-be-filled
-      - DEBUG=False
-      # OIDC inline PEM (newlines escaped as \n; settings.py reconstructs them)
-      - OIDC_RSA_PRIVATE_KEY=add-rsa-private-key
+    env_file:
+      - .env
     entrypoint: /app/entrypoint.sh
     command: gunicorn pyauthservice.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
 

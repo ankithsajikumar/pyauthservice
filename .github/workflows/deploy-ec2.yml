@@ -1,0 +1,28 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    uses: hacksawrazor/ci-cd/.github/workflows/deploy-docker-ghcr.yml@main
+    with:
+      aws-region: 'eu-north-1b'
+      aws-role-to-assume: 'arn:aws:iam::286123980000:role/GithubActionsAccess'
+      image-name: '${{ github.repository }}'
+      deploy-path: '/opt/apps/auth'
+      container-port: '8000:8000'
+    secrets:
+      SSH_HOST: ${{ secrets.EC2_PUBLIC_IP }}
+      SSH_USER: ${{ secrets.EC2_SSH_USER }}
+      SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+      
+      # Maps all individual repository secrets dynamically into .env generator
+      INDIVIDUAL_SECRETS_JSON: ${{ toJson(secrets) }}

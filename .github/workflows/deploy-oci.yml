@@ -15,6 +15,7 @@ jobs:
     with:
       image-name: '${{ github.repository }}'
       deploy-path: '/opt/apps/auth'
+      use-sudo: true
     secrets:
       SSH_HOST: ${{ secrets.OCI_SERVER_IP }}
       SSH_USER: ${{ secrets.OCI_SERVER_USER }}

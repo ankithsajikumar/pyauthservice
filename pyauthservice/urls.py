@@ -10,7 +10,7 @@ from .views import status_report, login_page, login_view, logout_view, health
 
 urlpatterns = [
     path('auth/login/', login_page, name='login-page'),
-    path('auth/admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('auth/o/', include(oauth2_urls)),
     path('api/', include(users_urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

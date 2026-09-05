@@ -1,0 +1,22 @@
+name: Deploy Application
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    uses: hacksawrazor/ci-cd/.github/workflows/deploy-docker-oci.yml@main
+    with:
+      image-name: '${{ github.repository }}'
+      deploy-path: '/opt/apps/auth'
+    secrets:
+      SSH_HOST: ${{ secrets.OCI_SERVER_IP }}
+      SSH_USER: ${{ secrets.OCI_SERVER_USER }}
+      SSH_KEY: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+      INDIVIDUAL_SECRETS_JSON: ${{ toJson(vars) }}

@@ -1,9 +1,7 @@
 name: Deploy Application
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -25,4 +23,4 @@ jobs:
       SSH_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
       
       # Maps all individual repository secrets dynamically into .env generator
-      INDIVIDUAL_SECRETS_JSON: ${{ toJson(secrets) }}
+      INDIVIDUAL_SECRETS_JSON: ${{ toJson(vars) }}

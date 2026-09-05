@@ -42,10 +42,12 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'auth4hacksawrazor.pythonanywhere.com',
     'apis.hacksaw.in',
+    'auth.hacksaw.in',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://apis.hacksaw.in",
+    "https://auth.hacksaw.in",
 ]
 
 # Application definition

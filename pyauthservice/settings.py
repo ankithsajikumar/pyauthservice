@@ -30,25 +30,30 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-# Service API authorization details
-SERVICE_API_TOKEN = env('SERVICE_API_TOKEN')
-SERVICE_API_TOKEN_KEY = 'X-Status-Token'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = [
+def _merge_env_list(defaults, setting_name):
+    return list(dict.fromkeys(defaults + env.list(setting_name, default=[])))
+
+
+ALLOWED_HOSTS = _merge_env_list([
     'localhost',
     '127.0.0.1',
-    'auth4hacksawrazor.pythonanywhere.com',
-    'apis.hacksaw.in',
-    'auth.hacksaw.in',
-]
+], 'ALLOWED_HOSTS')
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://apis.hacksaw.in",
-    "https://auth.hacksaw.in",
-]
+CSRF_TRUSTED_ORIGINS = _merge_env_list([
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+], 'CSRF_TRUSTED_ORIGINS')
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = _merge_env_list([
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+], 'CORS_ALLOWED_ORIGINS')
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -111,7 +116,7 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'users.User'
 
-LOGIN_URL = '/login/#/login'
+LOGIN_URL = '/admin/login'
 
 OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
@@ -215,19 +220,3 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# CORS settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://192.168.1.99",
-    "https://entespotify.github.io",
-    "https://hacksaw.in",
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-# Artifactory
-ARTIFACTORY_DOMAIN = env('ARTIFACTORY_DOMAIN')
-
-# Login app
-LOGIN_APP_VERSION = env('LOGIN_APP_VERSION')

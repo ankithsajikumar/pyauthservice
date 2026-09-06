@@ -9,7 +9,8 @@ A Django-based authentication service providing SSO (Single Sign-On) and user ma
 - Custom user model
 - User management API (CRUD)
 - OAuth2 and JWT authentication support
-- Admin interface
+- Django admin interface for user and OAuth application management
+- Health check endpoint
 
 ---
 
@@ -117,11 +118,11 @@ pip freeze > requirements.txt
 ## API Endpoints
 
 - **Root Redirect:**  
-  - `GET /` — Redirects to the configured `HOME_URL`  
+  - `GET /` — Redirects to the Django admin interface at `/admin/`
     ```sh
     curl -v https://domain/
     ```
-    > You will receive an HTTP 302 redirect to the URL set as `HOME_URL`.
+    > You will receive an HTTP 302 redirect to `/admin/`.
 
 - **User Management:**  
   - `GET /api/users/` — List users  
@@ -192,15 +193,12 @@ pip freeze > requirements.txt
     curl -X POST https://domain/api/logout/ \
     ```
 
-- **Status:**  
-  - `GET /api/status/` — Server status (requires service token)  
+- **Health:**
+  - `GET /health/` — Basic service health check
     ```sh
-    curl -H "<service_api_token_key>: <service_api_token>" https://domain/api/status/
+    curl https://domain/health/
     ```
-    > Returns:  
-    > `{ "status": "ok", "service": "pyauthservice" }`  
-    >  
-    > Use the value of `SERVICE_API_TOKEN` as `<service_api_token>`.
+    > Returns `{ "status": "ok" }`.
 
 ---
 
@@ -264,26 +262,41 @@ Create a `.env` file in your project root (same directory as `manage.py`) with t
 |----------------------|--------------------------------------------------|
 | `SECRET_KEY`         | Django secret key for cryptographic signing      |
 | `DEBUG`              | Set to `True` for development, `False` for prod  |
-| `SERVICE_API_TOKEN`  | Token required for accessing special endpoints   |
-| `ARTIFACTORY_DOMAIN` | Artifactory domain for web apps used in project  |
-| `LOGIN_APP_VERSION`  | Login web app version to be used                 |
+| `ALLOWED_HOSTS`       | Additional comma-separated hostnames for production |
+| `CSRF_TRUSTED_ORIGINS` | Additional comma-separated HTTPS origins for CSRF |
+| `CORS_ALLOWED_ORIGINS` | Additional comma-separated frontend origins for CORS |
 | `OIDC_ISS_ENDPOINT`  | Auth service domain url passed with jwt          |
+| `OIDC_RSA_PRIVATE_KEY` | Inline OIDC RSA private key in PEM format      |
+| `OIDC_PRIVATE_KEY_PATH` | Path to an OIDC RSA private key PEM file      |
 
 **Example `.env` file:**
 ```env
 SECRET_KEY=<django-secret-key>
 DEBUG=True
-SERVICE_API_TOKEN=<service-api-token>
-ARTIFACTORY_DOMAIN=<artifactory-domain>
-LOGIN_APP_VERSION=0.0.1
+ALLOWED_HOSTS=localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 OIDC_ISS_ENDPOINT=<auth-service-domain>
+OIDC_PRIVATE_KEY_PATH=/path/to/oidc_private.pem
 ```
+
+`localhost` and `127.0.0.1` are included by default for development. Add the
+production values as comma-separated entries in `.env`:
+
+```env
+ALLOWED_HOSTS=apis.hacksaw.in,auth.hacksaw.in
+CSRF_TRUSTED_ORIGINS=https://apis.hacksaw.in,https://auth.hacksaw.in
+CORS_ALLOWED_ORIGINS=https://hacksaw.in
+```
+
+Environment values are merged with the defaults and duplicate entries are
+removed.
 
 > **Note:** Never commit your `.env` file with real secrets to version control. Use `.env.example` as a template.
 
 ---
 
-> **Note:** Add an `oidc_private.pem` file to project root and keep RSA private key in it for OIDC.
+> **Note:** Configure the OIDC RSA private key with `OIDC_RSA_PRIVATE_KEY`, `OIDC_PRIVATE_KEY_PATH`, or an `oidc_private.pem` file in the project root.
 
 ---
 
@@ -293,13 +306,11 @@ Before running the deploy workflow, set the following in your repository:
 
 #### Repository Variables (`Settings > Variables > Actions`)
 - `CONSOLE_USER_ID`: PythonAnywhere username
-- `SERVICE_API_TOKEN_KEY`: The header key for your status API token
 
 #### Repository Secrets (`Settings > Secrets > Actions`)
 - `CONSOLE_API_KEY`: PythonAnywhere API token (get from your PythonAnywhere account)
-- `SERVICE_API_TOKEN`: The value of your status API token (should match `SERVICE_API_TOKEN` in your `.env` and Django settings)
 
-These are required for the workflow to authenticate with PythonAnywhere and to check your server
+These are required for the workflow to authenticate with PythonAnywhere.
 
 ## License
 

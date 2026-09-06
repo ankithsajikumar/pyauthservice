@@ -23,7 +23,7 @@ python manage.py migrate --noinput
 
 # Collect static files (if needed)
 echo "📦 Collecting static files..."
-python manage.py collectstatic --noinput || true
+python manage.py collectstatic --noinput
 
 # Create superuser if it doesn't exist (optional, for development)
 if [ "$DEBUG" = "True" ]; then

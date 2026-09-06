@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
+from django.views.generic import RedirectView
 from oauth2_provider import urls as oauth2_urls
 from users import urls as users_urls
 from rest_framework_simplejwt.views import (
@@ -9,6 +10,7 @@ from rest_framework_simplejwt.views import (
 from .views import status_report, login_page, login_view, logout_view, health
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/admin/', permanent=False), name='home'),
     path('auth/login/', login_page, name='login-page'),
     path('admin/', admin.site.urls),
     path('auth/o/', include(oauth2_urls)),

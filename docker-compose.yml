@@ -1,6 +1,7 @@
 services:
   pyauthservice:
     image: ${FULL_IMAGE}:${IMAGE_TAG}
+    user: "1000:1000"
     build:
       context: .
       dockerfile: Dockerfile

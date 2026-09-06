@@ -39,10 +39,10 @@ pyauthservice/
 
 ## Services
 
-### 1. App Service
+### App Service
 **Image**: `pyauthservice:latest` (built locally)  
 **Port**: 8000  
-**Database**: PostgreSQL via environment variable `DATABASE_URL`
+**Database**: External PostgreSQL via `POSTGRES_*` environment variables
 
 The entrypoint script automatically:
 - Waits for database to be ready
@@ -50,20 +50,7 @@ The entrypoint script automatically:
 - Collects static files
 - Creates default superuser (dev only)
 
-### 2. Database Service
-**Image**: `postgres:15-alpine`  
-**Port**: 5432  
-**Credentials**: 
-- User: `authuser`
-- Password: `authpassword`
-- Database: `pyauthservice`
-
-**Volume**: `postgres-data` (persists between restarts)
-
-### 3. Cache Service (Redis)
-**Image**: `redis:7-alpine`  
-**Port**: 6379  
-**Purpose**: Session/token caching (optional, can be disabled)
+The Compose configuration intentionally does not provision a database container. Set `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, and `POSTGRES_PORT` in `.env` for the external PostgreSQL instance.
 
 ## Development Workflow
 
@@ -142,7 +129,7 @@ cp .env.example .env
 **Key variables:**
 - `DEBUG`: Set to `False` for production
 - `SECRET_KEY`: Must be secret in production
-- `DATABASE_URL`: Connection string (auto-configured for Docker)
+- `POSTGRES_*`: PostgreSQL connection settings
 - `ALLOWED_HOSTS`: Comma-separated list of allowed domains
 - `SERVICE_API_TOKEN`: API token for special endpoints
 

@@ -6,15 +6,15 @@ set -e
 
 echo "🐳 PyAuthService - Starting..."
 
-# Wait for database to be ready only when using a network database
-if [ -n "${DB_HOST:-}" ] && [ "${DB_HOST}" != "sqlite" ]; then
-  echo "⏳ Waiting for database at ${DB_HOST}:${DB_PORT:-5432}..."
-  while ! nc -z "${DB_HOST}" "${DB_PORT:-5432}"; do
+# Wait for PostgreSQL only when it is the selected database engine.
+if [ "${DB_ENGINE:-postgresql}" != "sqlite3" ] && [ -n "${POSTGRES_HOST:-}" ]; then
+  echo "⏳ Waiting for database at ${POSTGRES_HOST}:${POSTGRES_PORT:-5432}..."
+  while ! nc -z "${POSTGRES_HOST}" "${POSTGRES_PORT:-5432}"; do
     sleep 1
   done
   echo "✅ Database is ready"
 else
-  echo "📁 Using local SQLite database; skipping external DB wait."
+  echo "📁 PostgreSQL is not selected or POSTGRES_HOST is not set; skipping database readiness wait."
 fi
 
 # Run migrations

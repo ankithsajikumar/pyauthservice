@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
+import certifi
 import os
 import logging
 
@@ -107,12 +108,30 @@ WSGI_APPLICATION = 'pyauthservice.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db' / 'db.sqlite3',
+DB_ENGINE = env('DB_ENGINE', default='sqlite3' if DEBUG else 'postgresql')
+
+if DB_ENGINE == 'sqlite3':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db' / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('POSTGRES_DB', default='hacksaw'),
+            'USER': env('POSTGRES_USER', default='authuser'),
+            'PASSWORD': env('POSTGRES_PASSWORD', default='authpassword'),
+            'HOST': env('POSTGRES_HOST', default='localhost'),
+            'PORT': env('POSTGRES_PORT', default='5432'),
+            'OPTIONS': {
+                'sslmode': 'verify-full',
+                'sslrootcert': certifi.where(),
+            },
+        },
+    }
 
 AUTH_USER_MODEL = 'users.User'
 

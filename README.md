@@ -16,7 +16,7 @@ A Django-based authentication service providing SSO (Single Sign-On) and user ma
 
 ## 🐳 Quick Start with Docker (Recommended)
 
-The fastest way to get started is using Docker and Docker Compose. This automatically sets up PostgreSQL, the app, and Redis cache.
+The fastest way to get started is using Docker and Docker Compose. The app runs migrations against the PostgreSQL database configured in `.env`.
 
 ### Prerequisites
 - [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
@@ -30,7 +30,7 @@ cd pyauthservice
 # 2. Copy environment template and customize
 cp .env.example .env
 
-# 3. Start all services (app, database, cache)
+# 3. Start the app
 docker-compose up -d
 
 # Container runs migrations and creates superuser automatically!
@@ -40,7 +40,7 @@ docker-compose up -d
 - **App**: http://localhost:8000
 - **Admin**: http://localhost:8000/admin (username: `admin`, password: `admin`)
 - **API**: http://localhost:8000/api/
-- **Database**: `postgresql://authuser:authpassword@localhost:5432/pyauthservice`
+- **Database**: PostgreSQL configured with `POSTGRES_*` variables in `.env`
 
 ### Useful Docker Commands
 ```sh

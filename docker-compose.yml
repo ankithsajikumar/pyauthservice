@@ -9,12 +9,8 @@ services:
     ports:
       - "${PORT:-8000:8000}"
     volumes:
-      - sqlite-data:/app/db
       - ./staticfiles:/app/staticfiles
     env_file:
       - .env
     entrypoint: /app/entrypoint.sh
     command: gunicorn pyauthservice.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 120
-
-volumes:
-  sqlite-data:

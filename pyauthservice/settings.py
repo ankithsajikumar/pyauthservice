@@ -189,6 +189,8 @@ OAUTH2_PROVIDER = {
         "read": "Read-only access",
         "write": "Write access",
         "openid": "OpenID Connect scope",
+        "email": "Access to the user's email address",
+        "profile": "Access to the user's profile information",
     },
 }
 

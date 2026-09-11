@@ -109,6 +109,7 @@ WSGI_APPLICATION = 'pyauthservice.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DB_ENGINE = env('DB_ENGINE', default='sqlite3' if DEBUG else 'postgresql')
+DB_CONN_MAX_AGE = env.int('DB_CONN_MAX_AGE', default=0 if DEBUG else 60)
 
 if DB_ENGINE == 'sqlite3':
     DATABASES = {
@@ -126,6 +127,8 @@ else:
             'PASSWORD': env('POSTGRES_PASSWORD', default='authpassword'),
             'HOST': env('POSTGRES_HOST', default='localhost'),
             'PORT': env('POSTGRES_PORT', default='5432'),
+            'CONN_MAX_AGE': DB_CONN_MAX_AGE,
+            'CONN_HEALTH_CHECKS': True,
             'OPTIONS': {
                 'sslmode': 'verify-full',
                 'sslrootcert': certifi.where(),

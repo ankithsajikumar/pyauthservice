@@ -180,6 +180,7 @@ OAUTH2_PROVIDER = {
     'PKCE_REQUIRED': False,
     "ACCESS_TOKEN_GENERATOR": "oauth.jwt_tokens.jwt_access_token_generator",
     'OIDC_ENABLED': True,
+    'OAUTH2_VALIDATOR_CLASS': 'oauth.validators.UserClaimsValidator',
     # OIDC RSA private key: prefer raw key in env, then a path in env, then BASE_DIR/oidc_private.pem
     # Set either `OIDC_RSA_PRIVATE_KEY` (PEM content) or `OIDC_PRIVATE_KEY_PATH` (path to PEM file)
     # or place `oidc_private.pem` at the project root.

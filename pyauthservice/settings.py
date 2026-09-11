@@ -179,6 +179,7 @@ OAUTH2_PROVIDER = {
     'REFRESH_TOKEN_EXPIRE_SECONDS': 3600 * 24 * 365,
     'PKCE_REQUIRED': False,
     "ACCESS_TOKEN_GENERATOR": "oauth.jwt_tokens.jwt_access_token_generator",
+    "REFRESH_TOKEN_GENERATOR": "oauth.jwt_tokens.opaque_refresh_token_generator",
     'OIDC_ENABLED': True,
     'OAUTH2_VALIDATOR_CLASS': 'oauth.validators.UserClaimsValidator',
     # OIDC RSA private key: prefer raw key in env, then a path in env, then BASE_DIR/oidc_private.pem

@@ -1,5 +1,6 @@
 import time, uuid, jwt
 from django.conf import settings
+from oauthlib.common import generate_token
 from oauth2_provider.utils import jwk_from_pem
 
 from pyauthservice.constants import DEFAULT_AUDIENCE
@@ -35,3 +36,7 @@ def jwt_access_token_generator(request):
     key = jwk_from_pem(private_key)
     kid = key.thumbprint()
     return jwt.encode(payload, private_key, algorithm="RS256", headers={"kid": kid})
+
+
+def opaque_refresh_token_generator(request):
+    return generate_token(32)

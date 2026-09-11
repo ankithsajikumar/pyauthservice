@@ -18,8 +18,4 @@ class UserClaimsValidator(OAuth2Validator):
         return {
             'email': user.email,
             'email_verified': bool(user.email),
-            'name': user.get_full_name(),
-            'given_name': user.first_name,
-            'family_name': user.last_name,
-            'preferred_username': user.get_username(),
         }

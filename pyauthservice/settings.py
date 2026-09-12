@@ -177,7 +177,7 @@ LOGIN_URL = '/admin/login'
 OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
     'REFRESH_TOKEN_EXPIRE_SECONDS': 3600 * 24 * 365,
-    'PKCE_REQUIRED': False,
+    'PKCE_REQUIRED': env.bool('OAUTH2_PKCE_REQUIRED', default=False),
     "ACCESS_TOKEN_GENERATOR": "oauth.jwt_tokens.jwt_access_token_generator",
     "REFRESH_TOKEN_GENERATOR": "oauth.jwt_tokens.opaque_refresh_token_generator",
     'OIDC_ENABLED': True,

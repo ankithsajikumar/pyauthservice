@@ -39,6 +39,83 @@ pyauthservice/
 
 ## Services
 
+### Forwarding oauth2-proxy access tokens
+
+When oauth2-proxy protects this service, configure it to forward the OAuth access
+token rather than forwarding its session cookie to Django. Use the settings in
+`oauth2-proxy.env.example`, especially:
+
+```text
+OAUTH2_PROXY_PASS_ACCESS_TOKEN=true
+OAUTH2_PROXY_SET_AUTHORIZATION_HEADER=true
+```
+
+If Nginx uses `auth_request`, copy the access-token response header from the
+oauth2-proxy subrequest to the upstream request:
+
+```nginx
+location /api/ {
+    auth_request /oauth2/auth;
+    auth_request_set $access_token $upstream_http_x_auth_request_access_token;
+    proxy_set_header Authorization "Bearer $access_token";
+    proxy_pass http://pyauthservice:8000;
+}
+
+location = /oauth2/auth {
+    internal;
+    proxy_pass http://oauth2-proxy:4180/oauth2/auth;
+    proxy_pass_request_body off;
+    proxy_set_header Content-Length "";
+    proxy_set_header X-Original-URI $request_uri;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $http_host;
+}
+```
+
+The Django API continues to authenticate the forwarded token using
+`SSOJWTAuthentication`; the SPA only makes same-origin requests with its
+oauth2-proxy session cookie:
+
+```javascript
+fetch('/api/users/', { credentials: 'include' })
+```
+
+Do not expose the session cookie or client secret to browser JavaScript.
+
+### React SPA with the same SSO session
+
+Register the SPA as a separate **public** OAuth application. Use the
+authorization-code flow with PKCE and do not give the SPA a client secret:
+
+```text
+Client type: Public
+Grant type: Authorization code
+Redirect URI: https://analytics.hacksaw.in/auth/callback
+Scopes: openid email profile
+Algorithm: RS256
+```
+
+The SPA should use an OIDC client library with PKCE. Its browser flow is:
+
+```text
+analytics.hacksaw.in -> auth.hacksaw.in/o/authorize/
+                     -> existing SSO login session
+                     -> /auth/callback?code=...
+                     -> POST /o/token/ with code_verifier
+                     -> API with Authorization: Bearer <access_token>
+```
+
+The SPA API request is then:
+
+```javascript
+fetch('https://api.hacksaw.in/api/users/', {
+    headers: { Authorization: `Bearer ${accessToken}` },
+});
+```
+
+For production, set `OAUTH2_PKCE_REQUIRED=True` only after every authorization
+code client, including oauth2-proxy, is configured to send S256 PKCE.
+
 ### App Service
 **Image**: `pyauthservice:latest` (built locally)  
 **Port**: 8000  

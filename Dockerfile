@@ -1,48 +1,41 @@
 # PyAuthService - Django OAuth2/JWT Authentication Service
-# Multistage build for smaller final image
-FROM python:3.11-slim as builder
+# Keep build-only tooling and pip metadata out of the runtime image.
+FROM python:3.11-slim-bookworm AS builder
 
 WORKDIR /app
 
-# Install build dependencies
+# psycopg2-binary normally uses a wheel, but retaining the compiler in this
+# stage keeps builds portable without adding it to the final image.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install dependencies
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN python -m pip install --no-cache-dir --no-compile --prefix=/install -r requirements.txt
 
-# Final stage
-FROM python:3.11-slim
+# Final stage: no compiler, PostgreSQL CLI, or pip cache.
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
-# Install runtime dependencies
+# netcat is used by entrypoint.sh to wait for PostgreSQL.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    postgresql-client \
     netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed packages from builder
-COPY --from=builder /root/.local /root/.local
+# Copy only the installed runtime packages and console scripts.
+COPY --from=builder /install /usr/local
 
-# Copy application code
-COPY . .
+# Create the same UID used by docker-compose and copy files with ownership set
+# during the image build to avoid a recursive chown layer.
+RUN useradd --create-home --uid 1000 appuser
 
-# Copy and set entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
+COPY --chown=appuser:appuser . .
+
 RUN chmod +x /app/entrypoint.sh
 
-# Create non-root user for security
-RUN useradd -m appuser && \
-    mkdir -p /home/appuser/.local && \
-    cp -a /root/.local/. /home/appuser/.local/ && \
-    chown -R appuser:appuser /app /home/appuser
-
 # Set environment variables
-ENV PATH=/home/appuser/.local/bin:$PATH \
+ENV PATH=/usr/local/bin:$PATH \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000

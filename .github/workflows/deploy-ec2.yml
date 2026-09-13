@@ -12,7 +12,7 @@ jobs:
   deploy:
     uses: hacksawrazor/ci-cd/.github/workflows/deploy-docker-ghcr.yml@main
     with:
-      aws-region: 'eu-north-1b'
+      aws-region: 'eu-north-1'
       aws-role-to-assume: 'arn:aws:iam::286123980000:role/GithubActionsAccess'
       image-name: '${{ github.repository }}'
       deploy-path: '/opt/apps/auth'

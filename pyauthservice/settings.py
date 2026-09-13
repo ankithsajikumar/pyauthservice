@@ -144,6 +144,7 @@ WSGI_APPLICATION = 'pyauthservice.wsgi.application'
 
 DB_ENGINE = env('DB_ENGINE', default='sqlite3' if DEBUG else 'postgresql')
 DB_CONN_MAX_AGE = env.int('DB_CONN_MAX_AGE', default=0 if DEBUG else 60)
+POSTGRES_SSLMODE = env('POSTGRES_SSLMODE', default='disable')
 
 if DB_ENGINE == 'sqlite3':
     DATABASES = {
@@ -164,11 +165,13 @@ else:
             'CONN_MAX_AGE': DB_CONN_MAX_AGE,
             'CONN_HEALTH_CHECKS': True,
             'OPTIONS': {
-                'sslmode': 'verify-full',
-                'sslrootcert': certifi.where(),
+                'sslmode': POSTGRES_SSLMODE,
             },
         },
     }
+
+    if POSTGRES_SSLMODE == 'verify-full':
+        DATABASES['default']['OPTIONS']['sslrootcert'] = certifi.where()
 
 AUTH_USER_MODEL = 'users.User'
 

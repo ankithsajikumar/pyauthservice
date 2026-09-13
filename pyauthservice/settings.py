@@ -159,7 +159,7 @@ else:
             'NAME': env('POSTGRES_DB', default='hacksaw'),
             'USER': env('POSTGRES_USER', default='authuser'),
             'PASSWORD': env('POSTGRES_PASSWORD', default='authpassword'),
-            'HOST': env('POSTGRES_HOST', default='localhost'),
+            'HOST': env('POSTGRES_HOST', default='db'),
             'PORT': env('POSTGRES_PORT', default='5432'),
             'CONN_MAX_AGE': DB_CONN_MAX_AGE,
             'CONN_HEALTH_CHECKS': True,

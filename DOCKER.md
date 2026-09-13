@@ -119,7 +119,7 @@ code client, including oauth2-proxy, is configured to send S256 PKCE.
 ### App Service
 **Image**: `pyauthservice:latest` (built locally)  
 **Port**: 8000  
-**Database**: External PostgreSQL via `POSTGRES_*` environment variables
+**Database**: PostgreSQL provided by the Compose `db` service
 
 The entrypoint script automatically:
 - Waits for database to be ready
@@ -127,7 +127,7 @@ The entrypoint script automatically:
 - Collects static files
 - Creates default superuser (dev only)
 
-The Compose configuration intentionally does not provision a database container. Set `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_HOST`, and `POSTGRES_PORT` in `.env` for the external PostgreSQL instance.
+The Compose configuration provisions PostgreSQL as the `db` service. Its data is persisted in the `postgres_data` Docker volume. Set `POSTGRES_DB`, `POSTGRES_USER`, and `POSTGRES_PASSWORD` in `.env`; the application connects to `db:5432` over the private Compose network.
 
 ## Development Workflow
 

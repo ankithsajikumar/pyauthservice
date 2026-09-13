@@ -17,6 +17,7 @@ jobs:
       image-name: '${{ github.repository }}'
       deploy-path: '/opt/apps/auth'
       container-port: '8000:8000'
+      use-sudo: true
     secrets:
       SSH_HOST: ${{ secrets.EC2_PUBLIC_IP }}
       SSH_USER: ${{ secrets.EC2_SSH_USER }}
